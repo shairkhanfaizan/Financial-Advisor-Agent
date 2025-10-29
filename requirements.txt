@@ -1,0 +1,18 @@
+# Core app
+streamlit
+python-dotenv
+
+# LangChain core + community integrations
+langchain
+langchain-community
+langchain-google-genai
+
+# Vector store + embeddings
+faiss-cpu
+tiktoken
+
+# Document loading + PDF parsing
+PyPDF2
+
+# Validation + schema compatibility
+pydantic
