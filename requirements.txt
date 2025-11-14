@@ -12,7 +12,15 @@ faiss-cpu
 tiktoken
 
 # Document loading + PDF parsing
-PyPDF2
-
+pypdf #not PyPdf2 -> deprecated stopped recieiving updates after mid2023
 # Validation + schema compatibility
 pydantic
+
+# Machine learning
+numpy
+scikit-learn
+
+sentence-transformers 
+
+pandas
+pdfplumber
