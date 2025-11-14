@@ -88,16 +88,23 @@ if generate:
         for percent in range(0, 101, 10):
             time.sleep(0.15)
             progress_bar.progress(percent, text=progress_text)
-
+            
+            
+        #creating session state for response    
+        if "response" not in st.session_state:
+            st.session_state.response = ""
+        
         # Spinner during AI generation
         with st.spinner(f"⚙️ {mode} in progress..."):
             try:
                 # --- Mode Logic (no layout change) ---
                 if mode == "Financial Advisor":
-                    response = financial_advisor_agent(pdf_path, financial_goal)
+                    result = financial_advisor_agent(pdf_path, financial_goal)
+                    st.session_state.response = result
                     section_title = "💼 Your Financial Plan"
                 elif mode == "Fraud Detection":
-                    response = fraud_detection_agent(pdf_path)
+                    result = fraud_detection_agent(pdf_path)
+                    st.session_state.response = result
                     section_title = "🚨 Fraud Analysis Report"
 
                 # --- Display Result (same UI as before) ---
@@ -111,27 +118,28 @@ if generate:
                 else:
                     box_bg = "#1e293b"
                     text_color = "#f8fafc"
-
-                st.markdown(
-                    f"""
-                    <div class='recommendation-box' 
-                        style='background-color:{box_bg};
-                                color:{text_color};
-                                padding:1.5rem;
-                                border-radius:12px;
-                                box-shadow:0px 2px 8px rgba(0,0,0,0.08);
-                                line-height:1.6;
-                                font-size:1rem;'>
-                        {response}
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+                
+                if st.session_state.response:
+                    st.markdown(
+                        f"""
+                        <div class='recommendation-box' 
+                            style='background-color:{box_bg};
+                                    color:{text_color};
+                                    padding:1.5rem;
+                                    border-radius:12px;
+                                    box-shadow:0px 2px 8px rgba(0,0,0,0.08);
+                                    line-height:1.6;
+                                    font-size:1rem;'>
+                            {st.session_state.response}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
 
                 # --- Download Option (fixed to support both modes) ---
                 st.download_button(
                     label="📥 Download Report",
-                    data=response,
+                    data=st.session_state.response,
                     file_name=f"{mode.replace(' ', '_').lower()}_report.txt",
                     mime="text/plain",
                     use_container_width=True

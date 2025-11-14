@@ -41,6 +41,8 @@ agent_executor = AgentExecutor(
     agent=agent,
     tools=[analyze_transactions],
     verbose=True,
+    return_intermediate_steps=False,
+    handle_parsing_errors=True
 )
 
 # Agent Runner Function
@@ -73,6 +75,8 @@ fraud_executor = AgentExecutor(
     agent=fraud_agent,
     tools=[fraud_detection_tool],
     verbose=True,
+    return_intermediate_steps=False,
+    handle_parsing_errors=True
 )
 
 def fraud_detection_agent(pdf_file: str):
