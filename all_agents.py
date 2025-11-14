@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.agents import create_tool_calling_agent, AgentExecutor
+from langchain.agents import initialize_agent, AgentType
 from langchain import hub
 
 from tools import fraud_detection_tool, analyze_transactions  #tools.py file
@@ -28,20 +28,11 @@ llm = ChatGoogleGenerativeAI(
 prompt = hub.pull("hwchase17/openai-tools-agent")
 
 
-# Create the Tool-Calling Agent
-agent = create_tool_calling_agent(
+advisor_agent = initialize_agent(
+    tools=[analyze_transactions],
     llm=llm,
-    tools=[analyze_transactions],
-    prompt=prompt
-)
-
-
-# Agent Executor
-agent_executor = AgentExecutor(
-    agent=agent,
-    tools=[analyze_transactions],
+    agent=AgentType.OPENAI_FUNCTIONS,
     verbose=True,
-    return_intermediate_steps=False,
     handle_parsing_errors=True
 )
 
@@ -58,24 +49,18 @@ def financial_advisor_agent(pdf_file: str, financial_goal: str):
         str: The agent's financial recommendations.
     """
     query = f"Analyze my transactions in {pdf_file} and generate 7 recommendations based on my goal: {financial_goal}"
-    response = agent_executor.invoke({"input": query})
+    response = advisor_agent.invoke({"input": query})
     return response["output"]
 
 
 
 # Fraud Detection Agent
 
-fraud_agent = create_tool_calling_agent(
-    llm=llm,
-    tools=[fraud_detection_tool],  # only fraud tool
-    prompt=prompt
-)
-
-fraud_executor = AgentExecutor(
-    agent=fraud_agent,
+fraud_agent = initialize_agent(
     tools=[fraud_detection_tool],
+    llm=llm,
+    agent=AgentType.OPENAI_FUNCTIONS,
     verbose=True,
-    return_intermediate_steps=False,
     handle_parsing_errors=True
 )
 
@@ -96,5 +81,5 @@ def fraud_detection_agent(pdf_file: str):
             transactions with short explanations for each.
     """
     query = f"Detect potentially fraudulent or anomalous transactions in {pdf_file}."
-    response = fraud_executor.invoke({"input": query})
+    response = fraud_agent.invoke({"input": query})
     return response["output"]
