@@ -1,26 +1,26 @@
 # Core app
-streamlit
-python-dotenv
+streamlit==1.50.0
+python-dotenv==1.2.1
 
 # LangChain core + community integrations
-langchain
-langchain-community
-langchain-google-genai
+langchain==0.3.27
+langchain-community==0.3.31
+langchain-core==0.3.79
+langchain-google-genai==2.0.10
 
 # Vector store + embeddings
-faiss-cpu
-tiktoken
-
+faiss-cpu==1.12.0
+tiktoken==0.12.0
 # Document loading + PDF parsing
-pypdf #not PyPdf2 -> deprecated stopped recieiving updates after mid2023
+pypdf==6.1.3#not PyPdf2 -> deprecated stopped recieiving updates after mid2023
 # Validation + schema compatibility
-pydantic
+pydantic==2.12.3
 
 # Machine learning
-numpy
-scikit-learn
+numpy==2.3.4
+scikit-learn==1.7.2
 
-sentence-transformers 
+sentence-transformers==5.1.2
 
-pandas
-pdfplumber
+pandas==2.3.3
+pdfplumber==0.11.8
